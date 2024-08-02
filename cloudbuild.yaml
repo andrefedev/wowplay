@@ -19,7 +19,7 @@ steps:
       '--platform',
       'managed',
       '--region',
-      'europe-southwest1',
+      'southamerica-west1',
       '--port=8080',
       '--min-instances=1',
       '--max-instances=10',

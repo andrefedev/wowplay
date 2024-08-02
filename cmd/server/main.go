@@ -93,6 +93,8 @@ func UploadAndDownloadTvFile() http.HandlerFunc {
 		req.Header.Add("Referer", from)
 		req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
+		log.Printf("req: %v", req.Header)
+
 		// Realizar la solicitud
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -102,6 +104,16 @@ func UploadAndDownloadTvFile() http.HandlerFunc {
 			return
 		}
 		defer resp.Body.Close()
+
+		log.Printf("resp headers: %v", resp.Header)
+
+		// Leer el contenido del cuerpo de la respuesta
+		body, _ := io.ReadAll(resp.Body)
+
+		// Convertir el contenido a una cadena
+		htmlContent := string(body)
+
+		log.Printf("html: %v", htmlContent)
 
 		if resp.StatusCode != http.StatusOK {
 			w.WriteHeader(http.StatusInternalServerError)
