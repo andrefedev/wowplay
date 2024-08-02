@@ -75,6 +75,9 @@ func UploadAndDownloadTvFile() http.HandlerFunc {
 		url := query.Get("url")
 		from := query.Get("from")
 
+		log.Printf("url: %v", url)
+		log.Printf("from: %v", url)
+
 		// Crear una nueva solicitud GET
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
@@ -82,6 +85,8 @@ func UploadAndDownloadTvFile() http.HandlerFunc {
 			log.Printf("error reporting: [%v]", err)
 			return
 		}
+
+		log.Printf("origin: %v", from)
 
 		// Agregar encabezados personalizados
 		req.Header.Add("Origin", from)
