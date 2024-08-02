@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"io"
@@ -48,6 +49,21 @@ func main() {
 
 	r.Get("/ping", UploadAndDownloadTvFile())
 
+	// Determine port for HTTP service.
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	// create http server
+	// definimos un servidor http para poder apagarlo posteriormente.
+	// chi router por defecto no tiene está función, por lo tanto, debemos
+	// envolverlo con http.Server.
+	// httpServer := &http.Server{Addr: ":" + port, Handler: mux}
+	err = http.ListenAndServe(":"+port, r)
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalf("ListenAndServe: %v", err)
+	}
 }
 
 func UploadAndDownloadTvFile() http.HandlerFunc {
