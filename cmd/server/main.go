@@ -76,7 +76,7 @@ func UploadAndDownloadTvFile() http.HandlerFunc {
 		from := query.Get("from")
 
 		log.Printf("url: %v", url)
-		log.Printf("from: %v", url)
+		log.Printf("from: %v", from)
 
 		// Crear una nueva solicitud GET
 		req, err := http.NewRequest("GET", url, nil)
