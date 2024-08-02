@@ -1,0 +1,30 @@
+steps:
+  # Build the container image and push it with Kaniko
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - --cache=true
+      - --cache-ttl=6h
+      - --dockerfile=Dockerfile
+      - --destination=gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA
+
+  # Cloud Run Deploy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run',
+      'deploy',
+      '$REPO_NAME-$_ENV',
+      '--image',
+      'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA',
+      '--platform',
+      'managed',
+      '--region',
+      'southamerica-east1',
+      '--port=8080',
+      '--min-instances=1',
+      '--max-instances=10',
+      '--session-affinity',
+      '--allow-unauthenticated',
+      '--service-account',
+      '512235777343-compute@developer.gserviceaccount.com',
+    ]
